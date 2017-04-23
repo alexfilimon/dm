@@ -3,6 +3,10 @@
   var allNodes = []; //все точки
   var finalEdges = []; //финальнон остовное дерево
 
+  var polyLines = []; //нарисованные линии
+
+  var nodeTemp = [];
+
 //глобальные переменные
   var labelIndex = -1; //кол-во точек
   var wasFirst = false; //была ли первая точка
@@ -17,6 +21,15 @@
       count: 0
     };
     allNodes.push(tempObject);
+  };
+  function editNode(oldx, oldy, newx, newy) {
+    for (var i=0; i<allNodes.length; i++) {
+      if ( allNodes[i].x == oldx && allNodes[i].y == oldy ){
+        allNodes[i].x = newx;
+        allNodes[i].y = newy;
+        return true;
+      }
+    }
   };
   function generateTable() { //генерируется таблица для 2-го шага
     var out = "<table>"; //то, что будет вставляться в html страницу
@@ -72,7 +85,10 @@
           //формирование текущего ребра
           curEdge.push(point1);
           curEdge.push(point2);
-          curEdge.push(Math.sqrt((allNodes[point1].x-allNodes[point2].x)*(allNodes[point1].x-allNodes[point2].x)+(allNodes[point1].y-allNodes[point2].y)*(allNodes[point1].y-allNodes[point2].y)));
+          var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
+          var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
+          var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
+          curEdge.push(distance);
           //вставка текущего ребра в массив всех ребер
           allEdges.push(curEdge);
         }
@@ -95,42 +111,57 @@
       }
     }
   };
-  function deleteNodeFromMass(curId, processedMass) { //удаляет точку из массива точек
-      for(var i=0; i<processedMass; i++) {
-          var curNode = processedMass[i];
-          if (curNode = curId) {
-              processedMass.splice(i, 1);
-          } 
-          return true;
+  function deleteNodeFromMass(curId, mass) { //удаляет точку из массива точек
+      for(var i=0; i<mass.length; i++) {
+          if (mass[i] == curId) {
+              mass.splice(i, 1);
+              return true;
+          }
       }
       return false;
   };
   function drawFinal() {
       //рисование
-	for(var i=0;i<finalEdges.length;i++){
-		var curEdge = finalEdges[i];
-		var point1 = curEdge[0];
-		var point2 = curEdge[1];
+    	for(var i=0;i<finalEdges.length;i++){
+    		var curEdge = finalEdges[i];
+    		var point1 = curEdge[0];
+    		var point2 = curEdge[1];
 
-		var coordinates = [
-			{lat: allNodes[point1].x, lng: allNodes[point1].y},{lat: allNodes[point2].x, lng: allNodes[point2].y}
-		];
+    		var coordinates = [
+    			{lat: allNodes[point1].x, lng: allNodes[point1].y},{lat: allNodes[point2].x, lng: allNodes[point2].y}
+    		];
 
-		var flightPath = new google.maps.Polyline({
-			path: coordinates,
-			geodesic: true,
-			strokeColor: '#FF0000',
-			strokeOpacity: 1.0,
-			strokeWeight: 2
-		});
+    		var flightPath = new google.maps.Polyline({
+    			path: coordinates,
+    			geodesic: true,
+    			strokeColor: '#FF0000',
+    			strokeOpacity: 1.0,
+    			strokeWeight: 2
+    		});
 
-		flightPath.setMap(map);
+    		flightPath.setMap(map);
 
-		//polyLines.push(flightPath);
-	}
+    		polyLines.push(flightPath);
+    	}
   };
-  function updateEdgesGood(edgesGood, processed, left) {
-      edgesGood = [];
+  function deleteAllPolylinesFromMap() { //удаляет все линиии с карты
+    for(var i=0; i<polyLines.length; i++){//удаляет все внешние ребра(polyLines) с карты
+      polyLines[i].setMap(null);
+    } 
+
+    polyLines = [];
+  };
+  function deleteEdgeFromMassEdges(curEdge, edgesGood) {
+    for(var i=0; i<edgesGood.length; i++) {
+      if ( curEdge == edgesGood[i] ) { 
+        edgesGood.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
+  };
+  function updateEdgesGood(processed, left) {
+    var curMass = [];
     for (var i=0; i<allEdges.length; i++) {
         var curEdge = allEdges[i];
         var nodeId1 = curEdge[0];
@@ -138,12 +169,28 @@
         //console.log(nodeId1, nodeId2);
         if ( left.indexOf(nodeId1)>-1 && processed.indexOf(nodeId2)>-1
             || left.indexOf(nodeId2)>-1 && processed.indexOf(nodeId1)>-1) {
-            edgesGood.push(curEdge);
+            curMass.push(curEdge);
         }
+    }
+    return curMass;
+  };
+  function deleteAllEdgesFromMassEdges(node, massEdges) {
+    for(var i=0; i<massEdges.length; i++) {
+      var node1 = massEdges[i][0];
+      var node2 = massEdges[i][1];
+
+      if ( node == node1 || node == node2 ){
+        massEdges.splice(i, 1);
       }
+    }
+    return true;
   };
   function step(parametr) {
       //условие прекращения рекурсии if (parametr > 3) return true;
+        if (parametr > 3) {
+          console.log("Прекращение рекурсии по причине длинных путей");
+          return true;
+        } 
 
       //формируем массив processed = []; содержит точки с param=parametr
         var processed = [];
@@ -161,9 +208,11 @@
         }
       //формируем массив edgesGood = [];
         var edgesGood = [];
-        updateEdgesGood(edgesGood, processed, left);
+        edgesGood = updateEdgesGood(processed, left);
 
-        console.log(edgesGood);
+        if (edgesGood.length == 0) console.log("edgesGood пуст");
+
+        //console.log(edgesGood);
 
 
       var curEdgePos = 0; //текущая позиция обрабатываемого ребра
@@ -175,36 +224,47 @@
             var temp = nodeId1;
             nodeId1 = nodeId2;
             nodeId2 = temp;
+          }//теперь в nodeId1 - processed точка, а в nodeId2 - left точка
 
-          }
-          finalEdges.push(curEdge);
+          //вставляем в массив финальных ребер
+            finalEdges.push(curEdge);
 
           //удалить ребро curEdge из edgesGood
+            deleteEdgeFromMassEdges(curEdge, edgesGood);
           //добавить +1 к count точек текущего ребра
-            allNodes[node1Id].count++;
-            allNodes[node2Id].count++;
+            allNodes[nodeId1].count++;
+            allNodes[nodeId2].count++;
           //выставить param точке из left
             allNodes[nodeId2].par = parametr + 1;
           //удалить точку из left массива
-          //удаляем все ребра из edgesGood, содержащие точку left из текущего ребра; обновляем edgesGood
-            updateEdgesGood(edgesGood, processed, left);
+            deleteNodeFromMass(nodeId2, left);
+          //удаляем все ребра из edgesGood, содержащие точку left из текущего ребра;
+            deleteAllEdgesFromMassEdges(nodeId2, edgesGood);
+            edgesGood = updateEdgesGood(processed, left);
 
           //если count processed точки ==3, удаляем ее + обновить edgesGood
-          if ( allNodes[nodeId1]==3 ) {
-            //удалить ее из processed массива
+          //console.log("count ",allNodes[nodeId1]);
+          if ( allNodes[nodeId1].count==3 ) {
+            //удалить точку из processed массива
+              deleteNodeFromMass(nodeId1, processed);
             //обновить edgesGood
-              updateEdgesGood(edgesGood, processed, left);
+              edgesGood = updateEdgesGood(processed, left);
           }
       };
 
       //условие вхождения в рекурсию if () step(parametr+1);
-
+      if (left.length > 0) step(parametr+1);
 
   };
 
 
 
 //инициализация карты
+  function getIcon(text, fillColor, textColor, outlineColor) {
+      if (!text) text = '•'; //generic map dot
+      var iconUrl = "http://chart.googleapis.com/chart?cht=d&chdp=mapsapi&chl=pin%27i\\%27[" + text + "%27-2%27f\\hv%27a\\]h\\]o\\" + fillColor + "%27fC\\" + textColor + "%27tC\\" + outlineColor + "%27eC\\Lauto%27f\\&ext=.png";
+      return iconUrl;
+  }
   var map = document.getElementById('map'); //создание карты
   map = new google.maps.Map(map, {
      center: {lat: 51.685959, lng: 39.183597},
@@ -216,8 +276,9 @@
   	var marker = new google.maps.Marker({ //создается маркер
          position: location,
          map: map,
-         draggable: false,
-         label: ""+(++labelIndex)
+         draggable: true,
+         //label: ""+(++labelIndex),
+         icon: getIcon((++labelIndex), "cccccc", "000000", "000000")
      });
 
   	if (!wasFirst) {
@@ -236,32 +297,38 @@
     });
 
      //перемещение маркера
-     /*google.maps.event.addListener(marker, "dragstart", function(e) {
+     google.maps.event.addListener(marker, "dragstart", function(e) {
         var temp = marker.getPosition();
         nodeTemp[0] = {lat: temp.lat(), lng: temp.lng()};
-        deleteAllPolylinesFromMap();
-        
-
+        //deleteAllPolylinesFromMap();
      });
   	google.maps.event.addListener(marker, "drag", function(e) {
-        var temp = marker.getPosition();
-        nodeTemp[1] = {lat: temp.lat(), lng: temp.lng()};
+      var temp = marker.getPosition();
+      nodeTemp[1] = {lat: temp.lat(), lng: temp.lng()};
 
-        editNode(nodeTemp[0].lat,nodeTemp[0].lng,nodeTemp[1].lat,nodeTemp[1].lng);
+      deleteAllPolylinesFromMap();
+
+      editNode(nodeTemp[0].lat,nodeTemp[0].lng,nodeTemp[1].lat,nodeTemp[1].lng);
 
         
-  		//drawAllEdges();
+  		drawFinal();
   		
   		nodeTemp[0] = nodeTemp[1]
      });
      google.maps.event.addListener(marker, "dragend", function(e) {
-        alert("Выполнение программы приостановилось...");
+        //alert("Выполнение программы приостановилось...");
         main();
         //console.log(edges);
-     });*/
+     });
   });
 
 function main() {
+  allEdges = []; //все ребра
+  finalEdges = []; //финальнон остовное дерево
+
+  deleteAllPolylinesFromMap();
+
+
   readFromTable(); //чтение данных из таблицы
   sortAllEdges(); //сортировка массива ребер по их длине
 
@@ -278,8 +345,9 @@ function main() {
   }
 
   step(0);
-  //console.log(finalEdges);
-  //drawFinal();
+  //step(1);
+  console.log("final edges: ",finalEdges);
+  drawFinal();
 
   
 };
