@@ -1,4 +1,10 @@
 //кнопкиvar x = false;
+  function heightMap() {
+    var h = $(window).height();
+    $("#map").css('height',h+'px');
+  };
+  heightMap();
+  $(window).resize(heightMap);
   //$(".button-open-side-panel").addClass("open");
   $(".button-open-side-panel").click(function() {
     $(".button-open-side-panel").toggleClass("open");
