@@ -18,9 +18,10 @@ button.go{
 	cursor: pointer;
 	outline: none;
 }
-
 #wrap-table{
 	padding: 20px;
+	min-height: 1px;
+	min-width: 1px;
 }
 #wrap-table table{
 	border-collapse:collapse;
@@ -32,4 +33,42 @@ button.go{
 }
 #wrap-table table td.dis{
 	background-color: #ccc;
+}
+.side-panel{
+	min-height: 200px;
+	position: absolute;
+	min-width: 150px;
+	left: -2000px;
+	top: 80px;
+	z-index: 1200;
+	border: 1px solid #000;
+	box-shadow: 0 0 10px rgba(0,0,0,.5);
+	background-color: #fff;
+	transition: all ease .5s;
+}
+.side-panel.open{
+	left: 0;
+}
+.button-open-side-panel{
+	transform: rotate(270deg);
+	padding: 5px 10px;
+	border: none;
+	background-color: #fff;
+	border-radius: 0 0 10px 10px;
+	outline: none;
+	border: 1px solid #000;
+	position: absolute;
+	left: 0;
+	margin-left: -27px;
+	top: 150px;
+	z-index: 1300;
+	cursor: pointer;
+	font-size: 16px;
+	transition: all .5s ease;
+}
+.button-open-side-panel.open{
+	transform: rotate(360deg);
+	border-radius: 10px 10px 0 0;
+	top: 50px;
+	left: 50px;
 }

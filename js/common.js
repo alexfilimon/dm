@@ -1,9 +1,18 @@
+//кнопкиvar x = false;
+  //$(".button-open-side-panel").addClass("open");
+  $(".button-open-side-panel").click(function() {
+    $(".button-open-side-panel").toggleClass("open");
+    $(".side-panel").toggleClass("open");
+  });
+
+
 //глобальные массивы
   var allEdges = []; //все ребра
   var allNodes = []; //все точки
   var finalEdges = []; //финальнон остовное дерево
 
   var polyLines = []; //нарисованные линии
+  var markers = [];
 
   var nodeTemp = [];
 
@@ -212,7 +221,7 @@
 
         if (edgesGood.length == 0) console.log("edgesGood пуст");
 
-        console.log("edges good on",parametr," step:",edgesGood);
+        //console.log("edges good on",parametr," step:",edgesGood);
 
 
       var curEdgePos = 0; //текущая позиция обрабатываемого ребра
@@ -271,7 +280,6 @@
      zoom: 12
   });
   google.maps.event.addListener(map, 'click', function(e) { //при нажатии на любую точку карты
-         
     var location = e.latLng;
   	var marker = new google.maps.Marker({ //создается маркер
          position: location,
@@ -294,6 +302,7 @@
            content: 'x: ' + location.lat() + '<br />y: ' + location.lng()
        });
        infoWindow.open(map, marker);
+
     });
 
      //перемещение маркера
@@ -320,8 +329,6 @@
         main();
         //console.log(edges);
      });
-
-     main();
   });
 
 function main() {
@@ -356,7 +363,7 @@ function main() {
 
   step(0);
   //step(1);
-  console.log("final edges: ",finalEdges);
+  //console.log("final edges: ",finalEdges);
   drawFinal();
 
   
