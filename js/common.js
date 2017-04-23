@@ -212,7 +212,7 @@
 
         if (edgesGood.length == 0) console.log("edgesGood пуст");
 
-        //console.log(edgesGood);
+        console.log("edges good on",parametr," step:",edgesGood);
 
 
       var curEdgePos = 0; //текущая позиция обрабатываемого ребра
@@ -320,11 +320,21 @@
         main();
         //console.log(edges);
      });
+
+     main();
   });
 
 function main() {
   allEdges = []; //все ребра
   finalEdges = []; //финальнон остовное дерево
+
+  //обнулить параметра у точек
+  allNodes[0].par = 0;
+  allNodes[0].count = 0;
+  for(var i=1;i<allNodes.length;i++) {
+    allNodes[i].par = -1;
+    allNodes[i].count = 0;
+  }
 
   deleteAllPolylinesFromMap();
 
