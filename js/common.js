@@ -175,6 +175,7 @@
             var temp = nodeId1;
             nodeId1 = nodeId2;
             nodeId2 = temp;
+
           }
           finalEdges.push(curEdge);
 
@@ -186,12 +187,13 @@
             allNodes[nodeId2].par = parametr + 1;
           //удалить точку из left массива
           //удаляем все ребра из edgesGood, содержащие точку left из текущего ребра; обновляем edgesGood
-
+            updateEdgesGood(edgesGood, processed, left);
 
           //если count processed точки ==3, удаляем ее + обновить edgesGood
           if ( allNodes[nodeId1]==3 ) {
             //удалить ее из processed массива
             //обновить edgesGood
+              updateEdgesGood(edgesGood, processed, left);
           }
       };
 
