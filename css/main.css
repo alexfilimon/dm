@@ -1,0 +1,35 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+#map{
+	height: 400px;
+	width: 100%;
+}
+button.go{
+	padding: 20px 40px;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: #fff;
+	border: 1px solid #000;
+	z-index: 1000;
+	border-radius: 20px;
+	cursor: pointer;
+	outline: none;
+}
+
+#wrap-table{
+	padding: 20px;
+}
+#wrap-table table{
+	border-collapse:collapse;
+	margin: 0 auto;
+}
+#wrap-table table td{
+	border: 1px solid #000;
+	padding: 3px 10px;
+}
+#wrap-table table td.dis{
+	background-color: #ccc;
+}
