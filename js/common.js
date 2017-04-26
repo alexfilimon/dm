@@ -1,4 +1,4 @@
-//кнопкиvar x = false;
+//кнопки
   function heightMap() {
     var h = $(window).height();
     $("#map").css('height',h+'px');
@@ -285,6 +285,19 @@
      center: {lat: 51.685959, lng: 39.183597},
      zoom: 12
   });
+
+  //поле поиска
+    var input = document.getElementById('searchTextField');
+    var options = {
+      types: ['(regions)'],
+    };
+    var autocomplete = new google.maps.places.Autocomplete(input, options);
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace(); //получаем место
+      self.map.panTo(place.geometry.location); //перемещение камеры к объекту
+    });
+
+
   google.maps.event.addListener(map, 'click', function(e) { //при нажатии на любую точку карты
     var location = e.latLng;
   	var marker = new google.maps.Marker({ //создается маркер
