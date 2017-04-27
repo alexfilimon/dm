@@ -20,6 +20,9 @@
   var polyLines = []; //нарисованные линии
   var markers = [];
 
+  var massBoolForTable = [];
+  var par = 0;
+
   var nodeTemp = [];
 
 //глобальные переменные
@@ -28,6 +31,73 @@
 
 
 //функции
+function getIdMarkerFromAllMarkers(lat, lng) {
+  for(var i=0; i<markers.length; i++) {
+    if ( lat == markers[i].position.lat() && lng == markers[i].position.lng() ) {
+      return i;
+    }
+  }
+  return -1;
+};
+  function addRowAndColInMassBool() {
+    var size = massBoolForTable.length;
+
+    var curMass = [];
+    for(var i=0; i<size; i++) {
+      curMass.push(true);
+    }
+
+    massBoolForTable.push(curMass);
+
+    for(var i=0; i<size+1; i++) {
+      massBoolForTable[i].push(true);
+    }
+  };
+  function showRow(idNode) {
+    par = idNode;
+    var out = "<table>"; //то, что будет вставляться в html страницу
+
+    for(var i=0; i<massBoolForTable.length; i++){ //генерируется сама таблица
+      var out = out+"<tr>";
+
+      out = out+"<td>"+i+"</td>";
+      if (i == idNode) {
+        out = out+"<td>"+"-1"+"</td>";
+      } else {
+        if (i<10) var iInsert = "0"+i;
+        else var iInsert = i;
+        if (idNode<10) var jInsert = "0"+idNode;
+        else var jInsert = idNode;
+        out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='js-switch' name='check'></td>";
+      }
+
+      out = out+"</tr>";
+      
+      
+    }
+
+    $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
+
+    /*$(".tableCheck").change(function() { //генерация события изменения checkbox-ов
+      var id=this.id;
+
+      //console.log($("#"+id).prop('checked'));
+
+      if ($("#"+id).prop('checked')){
+        $("#"+id.substr(-2,2)+id.substr(0,2)+"").prop("checked",true);
+      } else {
+        $("#"+id.substr(-2,2)+id.substr(0,2)+"").prop("checked",false);
+      }
+    });*/
+
+    var Switchery = require('switchery');
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    elems.forEach(function(html) {
+        var switchery = new Switchery(html);
+    });
+  };
+
+
   function addNodeToAllNodes(x, y, param) {
     var tempObject = {
       x: x,
@@ -63,10 +133,12 @@
           else var iInsert = i;
           if (j<10) var jInsert = "0"+j;
           else var jInsert = j;
-          out = out+"<td><input type='checkbox' checked id='"+iInsert+jInsert+"' class='tableCheck' name='check'></td>";
+          out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='js-switch' name='check'></td>";
         } 
       }
       out = out+"</tr>";
+      
+      
     }
 
     $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
@@ -81,6 +153,12 @@
       } else {
         $("#"+id.substr(-2,2)+id.substr(0,2)+"").prop("checked",false);
       }
+    });
+
+    var Switchery = require('switchery');
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+    elems.forEach(function(html) {
+        var switchery = new Switchery(html);
     });
   };
   function readFromTable() { //читает ребра из таблицы
@@ -308,20 +386,33 @@
          icon: getIcon((++labelIndex), "cccccc", "000000", "000000")
      });
 
+    console.log(marker.position);
+
   	if (!wasFirst) {
   		addNodeToAllNodes(location.lat(),location.lng(),0); //добавление точки в внутренний массив
   		wasFirst = true;
   	}
   	else addNodeToAllNodes(location.lat(),location.lng(),-1);
   	
-    generateTable();
+    addRowAndColInMassBool();
+    
+
+    markers.push(marker);
+    showRow(markers.length-1);
+
 
     google.maps.event.addListener(marker, "click", function(e) { //при нажатии на маркер
-       var infoWindow = new google.maps.InfoWindow({
+       /*var infoWindow = new google.maps.InfoWindow({
            content: 'x: ' + location.lat() + '<br />y: ' + location.lng()
        });
-       infoWindow.open(map, marker);
+       infoWindow.open(map, marker);*/
+       var curLat = e.latLng.lat();
+       var curLng = e.latLng.lng();
 
+       var id = getIdMarkerFromAllMarkers(curLat, curLng);
+       if (id>-1) {
+          showRow(id);
+       }
     });
 
      //перемещение маркера
