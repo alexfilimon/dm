@@ -1,17 +1,3 @@
-//кнопки
-  function heightMap() {
-    var h = $(window).height();
-    $("#map").css('height',h+'px');
-  };
-  heightMap();
-  $(window).resize(heightMap);
-  //$(".button-open-side-panel").addClass("open");
-  $(".button-open-side-panel").click(function() {
-    $(".button-open-side-panel").toggleClass("open");
-    $(".side-panel").toggleClass("open");
-  });
-
-
 //глобальные массивы
   var allEdges = []; //все ребра
   var allNodes = []; //все точки
@@ -21,7 +7,7 @@
   var markers = [];
 
   var massBoolForTable = [];
-  var par = 0;
+  var shownId = 0;
 
   var nodeTemp = [];
 
@@ -30,15 +16,62 @@
   var wasFirst = false; //была ли первая точка
 
 
+
+//кнопки
+  function heightMap() {
+    var h = $(window).height();
+    $("#map").css('height',h+'px');
+  };
+  heightMap();
+  $(window).resize(heightMap);
+  //$(".button-open-side-panel").addClass("open");
+  openTableButton();
+  $(".button-open-side-panel").click(function() {
+    openTableButton();
+  });
+
+
+
+
+
 //функции
-function getIdMarkerFromAllMarkers(lat, lng) {
-  for(var i=0; i<markers.length; i++) {
-    if ( lat == markers[i].position.lat() && lng == markers[i].position.lng() ) {
-      return i;
+  function openTableButton() {
+    if (massBoolForTable.length > 1) {
+      /*$(".button-open-side-panel").toggleClass("open");
+      $(".side-panel").toggleClass("open");*/
+      $(".button-open-side-panel").attr('disabled',false);
+
+      if ($(".side-panel").hasClass("open")) {
+        $(".button-open-side-panel").removeClass("open");
+        $(".side-panel").removeClass("open");
+      } else {
+        $(".button-open-side-panel").addClass("open");
+        $(".side-panel").addClass("open");
+      }
+
+    } else { //если точек < 2
+      $(".side-panel").removeClass("open");
+      $(".button-open-side-panel").removeClass("open").attr('disabled',true);
     }
-  }
-  return -1;
-};
+
+    
+  };
+  function openTable() {
+    $(".button-open-side-panel").addClass("open");
+    $(".side-panel").addClass("open");
+  };
+  function closeTable() {
+    $(".button-open-side-panel").removeClass("open");
+    $(".side-panel").removeClass("open");
+  };
+  function getIdMarkerFromAllMarkers(lat, lng) {
+    for(var i=0; i<markers.length; i++) {
+      if ( lat == markers[i].position.lat() && lng == markers[i].position.lng() ) {
+        return i;
+      }
+    }
+    return -1;
+  };
   function addRowAndColInMassBool() {
     var size = massBoolForTable.length;
 
@@ -54,8 +87,9 @@ function getIdMarkerFromAllMarkers(lat, lng) {
     }
   };
   function showRow(idNode) {
-    par = idNode;
-    var out = "<table>"; //то, что будет вставляться в html страницу
+    shownId = idNode;
+    var out = "<div class>Точка "+ idNode +" имеет связи с точками: <div>";
+    out = out +"<table>"; //то, что будет вставляться в html страницу
 
     for(var i=0; i<massBoolForTable.length; i++){ //генерируется сама таблица
       var out = out+"<tr>";
@@ -116,54 +150,32 @@ function getIdMarkerFromAllMarkers(lat, lng) {
       }
     }
   };
-  function generateTable() { //генерируется таблица для 2-го шага
-    var out = "<table>"; //то, что будет вставляться в html страницу
-
-    for(var i=-1; i<=labelIndex; i++){ //генерируется сама таблица
-      var out = out+"<tr>";
-      for(var j=-1; j<=labelIndex; j++) {
-        if (i==-1 && j>-1){
-          out = out+"<td>"+j+"</td>";
-        }else if (j==-1 && i>-1) {
-          out = out+"<td>"+i+"</td>";
-        } else if (i==j) {
-          out = out+"<td class='dis'></td>";
-        } else {
-          if (i<10) var iInsert = "0"+i;
-          else var iInsert = i;
-          if (j<10) var jInsert = "0"+j;
-          else var jInsert = j;
-          out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='js-switch' name='check'></td>";
-        } 
-      }
-      out = out+"</tr>";
-      
-      
-    }
-
-    $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
-
-    $(".tableCheck").change(function() { //генерация события изменения checkbox-ов
-      var id=this.id;
-
-      //console.log($("#"+id).prop('checked'));
-
-      if ($("#"+id).prop('checked')){
-        $("#"+id.substr(-2,2)+id.substr(0,2)+"").prop("checked",true);
-      } else {
-        $("#"+id.substr(-2,2)+id.substr(0,2)+"").prop("checked",false);
-      }
-    });
-
-    var Switchery = require('switchery');
-    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-    elems.forEach(function(html) {
-        var switchery = new Switchery(html);
-    });
-  };
   function readFromTable() { //читает ребра из таблицы
-    
-    for(var i=0; i<=labelIndex+1; i++) {
+    var size = massBoolForTable.length;
+    for(var i=0; i<size; i++) {
+      for(var j=i; j<size; j++) {
+        if (i<10) var i1 = "0"+i;
+        else var i1 = i;
+        if (j<10) var j1 = "0"+j;
+        else var j1 = j;
+
+        var curEdge = []; //текущее ребро
+        var point1 = i; //id точки
+        var point2 = j; //id другой точки
+
+        //формирование текущего ребра
+          curEdge.push(point1);
+          curEdge.push(point2);
+          var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
+          var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
+          var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
+          curEdge.push(distance);
+        //вставка текущего ребра в массив всех ребер
+          allEdges.push(curEdge);
+      }
+    };
+
+    /*for(var i=0; i<=labelIndex+1; i++) {
       for(var j=i; j<=labelIndex+1; j++){
         if (i<10) var i1 = "0"+i;
         else var i1 = i;
@@ -186,7 +198,7 @@ function getIdMarkerFromAllMarkers(lat, lng) {
           allEdges.push(curEdge);
         }
       }
-    }
+    }*/
   };
   function sortAllEdges() {
     for(var i=0; i<allEdges.length-1; i++) {
@@ -386,8 +398,6 @@ function getIdMarkerFromAllMarkers(lat, lng) {
          icon: getIcon((++labelIndex), "cccccc", "000000", "000000")
      });
 
-    console.log(marker.position);
-
   	if (!wasFirst) {
   		addNodeToAllNodes(location.lat(),location.lng(),0); //добавление точки в внутренний массив
   		wasFirst = true;
@@ -399,6 +409,7 @@ function getIdMarkerFromAllMarkers(lat, lng) {
 
     markers.push(marker);
     showRow(markers.length-1);
+    openTable();
 
 
     google.maps.event.addListener(marker, "click", function(e) { //при нажатии на маркер
@@ -481,5 +492,6 @@ function main() {
 
 //точка входа
 $(".go").click(function(){
-  main();
+  if (allNodes.length < 2) alert("Недостаточно точек");
+    else main();
 });
