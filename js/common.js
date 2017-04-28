@@ -18,16 +18,16 @@
 
 
 //кнопки
-  function heightMap() {
+  function height() {
     var h = $(window).height();
-    $("#map").css('height',h+'px');
+    $("#map").css('height',(h-64)+'px');
+    $(".side-panel").css('height',(h-64)+'px');
   };
-  heightMap();
-  $(window).resize(heightMap);
+  height();
+  $(window).resize(height);
   //$(".button-open-side-panel").addClass("open");
-  openTableButton();
-  $(".button-open-side-panel").click(function() {
-    openTableButton();
+  $(".button-menu").click(function() {
+    $(".side-panel").toggleClass("open");
   });
 
 
@@ -35,35 +35,6 @@
 
 
 //функции
-  function openTableButton() {
-    if (massBoolForTable.length > 1) {
-      /*$(".button-open-side-panel").toggleClass("open");
-      $(".side-panel").toggleClass("open");*/
-      $(".button-open-side-panel").attr('disabled',false);
-
-      if ($(".side-panel").hasClass("open")) {
-        $(".button-open-side-panel").removeClass("open");
-        $(".side-panel").removeClass("open");
-      } else {
-        $(".button-open-side-panel").addClass("open");
-        $(".side-panel").addClass("open");
-      }
-
-    } else { //если точек < 2
-      $(".side-panel").removeClass("open");
-      $(".button-open-side-panel").removeClass("open").attr('disabled',true);
-    }
-
-    
-  };
-  function openTable() {
-    $(".button-open-side-panel").addClass("open");
-    $(".side-panel").addClass("open");
-  };
-  function closeTable() {
-    $(".button-open-side-panel").removeClass("open");
-    $(".side-panel").removeClass("open");
-  };
   function getIdMarkerFromAllMarkers(lat, lng) {
     for(var i=0; i<markers.length; i++) {
       if ( lat == markers[i].position.lat() && lng == markers[i].position.lng() ) {
@@ -409,7 +380,6 @@
 
     markers.push(marker);
     showRow(markers.length-1);
-    openTable();
 
 
     google.maps.event.addListener(marker, "click", function(e) { //при нажатии на маркер
@@ -491,7 +461,7 @@ function main() {
 };
 
 //точка входа
-$(".go").click(function(){
+$(".button-build").click(function(){
   if (allNodes.length < 2) alert("Недостаточно точек");
     else main();
 });

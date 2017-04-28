@@ -78,6 +78,16 @@
     margin: 0;
     font-family: Roboto;
 }
+button, 
+button:active, 
+button:focus,
+input, 
+input:active, 
+input:focus {
+    outline: none;
+}
+
+
 #map{
 	height: 400px;
 	width: 100%;
@@ -107,56 +117,57 @@ button.go{
 	border: 1px solid #000;
 	padding: 3px 10px;
 }
-#wrap-table table td.dis{
-	background-color: #ccc;
-}
-.side-panel{
-	min-height: 200px;
-	position: absolute;
-	min-width: 150px;
-	left: -2000px;
-	top: 80px;
-	z-index: 1200;
-	border: 1px solid #000;
-	box-shadow: 0 0 10px rgba(0,0,0,.5);
-	background-color: #fff;
-	transition: all ease .5s;
-}
-.side-panel.open{
-	left: 0;
-}
-.button-open-side-panel{
-	transform: rotate(270deg);
-	padding: 5px 10px;
-	border: none;
-	background-color: #fff;
-	border-radius: 0 0 10px 10px;
-	outline: none;
-	border: 1px solid #000;
-	position: absolute;
-	left: 0;
-	margin-left: -27px;
-	top: 150px;
-	z-index: 1300;
-	cursor: pointer;
-	font-size: 16px;
-	transition: all .5s ease;
-}
-.button-open-side-panel.open{
-	transform: rotate(360deg);
-	border-radius: 10px 10px 0 0;
-	top: 50px;
-	left: 50px;
-}
 
 
 
 
-.button-top-menu{
+.button-top{
 	background-color: rgba(0,0,0,0);
 	border: none;
-
+	font-size: 16px;
+	outline: none;
+	-webkit-transition: .5s ease all;
+	-o-transition: .5s ease all;
+	transition: .5s ease all;
+	border-radius: 5px;
+	padding: 5px 10px;
+	font-size: 16px;
+	vertical-align: top;
+	height: 38px;
+	margin: 0 5px;
 }
+
+.button-top i{
+	font-size: 20px;
+}
+.buttons .button-top i{
+	font-size: 20px;
+	vertical-align: top;
+	margin-top: 1px;
+	font-size: 24px;
+ }
+.button-top.button-info i{
+	margin-top: 3px;
+}
+.button-top .name{
+	width: 0;
+	margin: 3px;
+	display: inline-block;
+	overflow: hidden;
+	text-align: left;
+	-webkit-transition: .5s ease all;
+	-o-transition: .5s ease all;
+	transition: .5s ease all;
+}
+.header:hover .button-top .name{
+    width: 80px;
+}
+.header .button-top:hover{
+	-webkit-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+	-moz-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+	box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+}
+
 /*bootstrap*/
 .header{
 	height: 64px;
@@ -166,31 +177,98 @@ button.go{
 }
 .header .button-menu{
 	display: inline-block;
-	height: 64px;
-	vertical-align:top;
+	width: 38px;
+	height: 38px;
+	padding-top: 7px;
+	vertical-align: top;
+	border-radius: 50px;
+	margin-top: 12px;
+}
+.header .button-menu:hover{
+	-webkit-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+	-moz-box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+	box-shadow: 0px 2px 10px 0px rgba(0,0,0,0.63);
+}
+.header .button-top:active, .header .button-menu:active{
+	transform: scale(0.95);
+	-webkit-box-shadow: 0px 2px 6px -2px rgba(0,0,0,0.63);
+	-moz-box-shadow: 0px 2px 6px -2px rgba(0,0,0,0.63);
+	box-shadow: 0px 2px 6px -2px rgba(0,0,0,0.63);
 }
 .header .logo{
 	display: inline-block;
 	height: 64px;
-	vertical-align:top;
+	vertical-align: top;
+	font-size: 18px;
+	padding: 8px 10px;
+}
+.header .logo .text{
+	border: 1px solid #fff;
+	padding: 10px 10px; 
+	border-radius: 4px;
+	display: inline-block;
 }
 .header .search{
 	display: inline-block;
 	height: 64px;
 	vertical-align:top;
+    position: relative;
 }
 .header .search .icon{
 	position: absolute;
 	color: #555;
 	z-index: 100;
+	top: 17px;
+	left: 10px;
+	font-size: 20px;
 }
 .header .search #searchTextField{
 	padding: 5px 10px 5px 40px;
-	width: 300px;
+	width: 700px;
+	margin-top: 8px;
 	color: #555;
+	border: none;
+	border-radius: 4px;
+	height: 46px;
+	font-size: 16px;
+	-webkit-transition: .5s ease all;
+	-o-transition: .5s ease all;
+	transition: .5s ease all;
+}
+.header:hover .search #searchTextField:focus{
+	-webkit-box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+	-moz-box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+	box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+}
+.header:hover .search #searchTextField{
+	width: 540px;
 }
 .header .buttons{
 	display: inline-block;
 	height: 64px;
-	vertical-align:top;
+	float: right;
+	text-align: right;
+	padding-top: 12px;
+}
+
+
+.side-panel{
+	position: absolute;
+	left: -230px;
+	top: 64px;
+	width: 200px;
+	background-color: #fff;
+	-webkit-box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+	-moz-box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+	box-shadow: 0px 4px 9px -3px rgba(0,0,0,0.63);
+	-webkit-transition: .5s ease all;
+	-o-transition: .5s ease all;
+	transition: .5s ease all;
+}
+.side-panel.open{
+	left: 0;
+}
+
+.footer{
+	display: none;
 }
