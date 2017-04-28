@@ -17,10 +17,11 @@
 
 
 
+
 //кнопки
   function height() {
     var h = $(window).height();
-    $("#map").css('height',(h-64)+'px');
+    $("#map").css('height',(h-64-28)+'px');
     $(".side-panel").css('height',(h-64)+'px');
   };
   height();
@@ -59,7 +60,7 @@
   };
   function showRow(idNode) {
     shownId = idNode;
-    var out = "<div class>Точка "+ idNode +" имеет связи с точками: <div>";
+    var out = "<div class>Точка "+ idNode +" имеет связи с точками: </div>";
     out = out +"<table>"; //то, что будет вставляться в html страницу
 
     for(var i=0; i<massBoolForTable.length; i++){ //генерируется сама таблица
@@ -67,19 +68,22 @@
 
       out = out+"<td>"+i+"</td>";
       if (i == idNode) {
-        out = out+"<td>"+"-1"+"</td>";
+        out = out+"<td>"+"-"+"</td>";
       } else {
+        var checked = ""; 
+        if ( massBoolForTable[i][idNode] == true ) checked = "checked";
         if (i<10) var iInsert = "0"+i;
         else var iInsert = i;
         if (idNode<10) var jInsert = "0"+idNode;
         else var jInsert = idNode;
-        out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='js-switch' name='check'></td>";
+        out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='checkbox' name='check' "+checked+"></td>";
       }
 
       out = out+"</tr>";
       
       
     }
+    out = out+"</table>";
 
     $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
 
@@ -95,11 +99,38 @@
       }
     });*/
 
-    var Switchery = require('switchery');
+    /*var Switchery = require('switchery');
     var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
     elems.forEach(function(html) {
-        var switchery = new Switchery(html);
+        var switchery = new Switchery(html, { color: '#4285F4', size: 'large' });
+        //setSwitchery(switchery, true);
+    });*/
+      
+    
+      
+    
+    
+
+    /*console.log($(".js-switch"));
+      
+    if ($(".js-switch").length>1) {
+        $(".js-switch").onchange = function() {
+          console.log("test");
+        };
+    }*/
+      
+    $(".checkbox").on("change",function(e) {
+        //console.log($(this).attr("id"));
+        var cur = $(this).attr("id");
+        var curx = Number(cur.substr(0,2));
+        var cury = Number(cur.substr(3,2));
+        //console.log(curx, cury);
+        massBoolForTable[curx][cury] = ($("#"+cur).prop('checked'));
+        massBoolForTable[cury][curx] = ($("#"+cur).prop('checked'));
     });
+      
+    
+      
   };
 
 
@@ -123,26 +154,29 @@
   };
   function readFromTable() { //читает ребра из таблицы
     var size = massBoolForTable.length;
+      
     for(var i=0; i<size; i++) {
       for(var j=i; j<size; j++) {
-        if (i<10) var i1 = "0"+i;
+        /*if (i<10) var i1 = "0"+i;
         else var i1 = i;
         if (j<10) var j1 = "0"+j;
-        else var j1 = j;
+        else var j1 = j;*/
 
-        var curEdge = []; //текущее ребро
-        var point1 = i; //id точки
-        var point2 = j; //id другой точки
+        if ( massBoolForTable[i][j] == true ) {
+            var curEdge = []; //текущее ребро
+            var point1 = i; //id точки
+            var point2 = j; //id другой точки
 
-        //формирование текущего ребра
-          curEdge.push(point1);
-          curEdge.push(point2);
-          var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
-          var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
-          var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
-          curEdge.push(distance);
-        //вставка текущего ребра в массив всех ребер
-          allEdges.push(curEdge);
+            //формирование текущего ребра
+              curEdge.push(point1);
+              curEdge.push(point2);
+              var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
+              var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
+              var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
+              curEdge.push(distance);
+            //вставка текущего ребра в массив всех ребер
+              allEdges.push(curEdge);
+        }
       }
     };
 
