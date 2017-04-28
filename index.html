@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Maps</title>
     
-    <link rel="stylesheet" href="libs/switch-master/switch.css">
+    <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="libs/switchery-master/standalone/switchery.css">
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap-theme.min.css">
@@ -26,17 +26,37 @@
     <div class="side">
         
     </div> -->
-
+ 
     <div class="wrap">
         <header class="header">
             <div class="container">
-                button+logo+search+Buttton-clear+button-build
+                <button class="button-menu button-top-menu">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="logo">
+                    Построение графов
+                </div>
+                <div class="search">
+                    <div class="icon"><i class="fa fa-search" aria-hidden="true"></i></div>
+                    <input id="searchTextField" type="text" placeholder="Поиск местоположения"> 
+                </div>
+                <div class="buttons">
+                    <button class="button-delete-nodes button-top-menu">
+                        <i class="fa fa-info" aria-hidden="true"></i>
+                    </button>
+                    <button class="button-delete-nodes button-top-menu">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <span class="name">Удалить все точки</span>
+                    </button>
+                    <button class="button-build button-top-menu">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                        <span class="name">Построить</span>
+                    </button>
+                </div>
             </div>
         </header>
         <div class="content">
-            <div class="container">
-                content here
-            </div>
+            <div id="map"></div>
         </div>
         <footer class="footer">
             <div class="container">
@@ -45,11 +65,11 @@
         </footer>
     </div>
    
-    <input id="searchTextField" size="50" type="text" /> 
+    
 
-    <button class="go">Построить</button>
+    <!-- <button class="go">Построить</button> -->
 
-    <div id="map"></div>
+    
 
     <div class="side-panel">
         <div id="wrap-table">
@@ -61,7 +81,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAp2evgeSPajlRd9Z2LjIraXYFQ_4J46S0&libraries=geometry,places"></script>
-    <script src="libs/switch-master/switch.js"></script>
     <script src="libs/switchery-master/standalone/switchery.js"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
     <script src="js/common.js"></script>
