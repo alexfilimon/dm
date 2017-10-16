@@ -4,10 +4,8 @@
   var finalEdges = []; //финальнон остовное дерево
 
   var polyLines = []; //нарисованные линии
-  var markers = [];
+  var markers = []; //маркеры на карте
 
-  var massBoolForTable = []; //массив булианов, отражающий возможные ребра
-  var shownId = 0; //текущая показываемая точка в боковом меню
 
   var nodeTemp = []; //временное ребро(для перерисовки при drag)
 
@@ -37,59 +35,6 @@
     }
     return -1;
   };
-  function addRowAndColInMassBool() { //добавить строку и столбец в массив булеанов
-    var size = massBoolForTable.length;
-
-    var curMass = [];
-    for(var i=0; i<size; i++) {
-      curMass.push(true);
-    }
-
-    massBoolForTable.push(curMass);
-
-    for(var i=0; i<size+1; i++) {
-      massBoolForTable[i].push(true);
-    }
-  };
-  function showRow(idNode) { //показать строку(из массива булеанов) в боковом меню по id точки
-    shownId = idNode;
-    var out = "<div class>Точка "+ idNode +" имеет связи с точками: </div>";
-    out = out +"<table>"; //то, что будет вставляться в html страницу
-
-    for(var i=0; i<massBoolForTable.length; i++){ //генерируется сама таблица
-      var out = out+"<tr>";
-
-      out = out+"<td>"+i+"</td>";
-      if (i == idNode) {
-        out = out+"<td>"+"-"+"</td>";
-      } else {
-        var checked = ""; 
-        if ( massBoolForTable[i][idNode] == true ) checked = "checked";
-        if (i<10) var iInsert = "0"+i;
-        else var iInsert = i;
-        if (idNode<10) var jInsert = "0"+idNode;
-        else var jInsert = idNode;
-        out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='checkbox' name='check' "+checked+"></td>";
-      }
-
-      out = out+"</tr>";
-      
-      
-    }
-    out = out+"</table>";
-
-    $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
-
-    $(".checkbox").on("change",function(e) {
-        //console.log($(this).attr("id"));
-        var cur = $(this).attr("id");
-        var curx = Number(cur.substr(0,2));
-        var cury = Number(cur.substr(2,2));
-        console.log(curx, cury);
-        massBoolForTable[curx][cury] = ($("#"+cur).prop('checked'));
-        massBoolForTable[cury][curx] = ($("#"+cur).prop('checked'));
-    });
-  };
   function addNodeToAllNodes(x, y, param) { //добавить точку в массив всех точек
     var tempObject = {
       x: x,
@@ -108,59 +53,7 @@
       }
     }
   };
-  function readFromTable() { //читает ребра из таблицы
-    var size = massBoolForTable.length;
-      
-    for(var i=0; i<size; i++) {
-      for(var j=i; j<size; j++) {
-        /*if (i<10) var i1 = "0"+i;
-        else var i1 = i;
-        if (j<10) var j1 = "0"+j;
-        else var j1 = j;*/
 
-        if ( massBoolForTable[i][j] === true ) {
-            var curEdge = []; //текущее ребро
-            var point1 = i; //id точки
-            var point2 = j; //id другой точки
-
-            //формирование текущего ребра
-              curEdge.push(point1);
-              curEdge.push(point2);
-              var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
-              var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
-              var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
-              curEdge.push(distance);
-            //вставка текущего ребра в массив всех ребер
-              allEdges.push(curEdge);
-        }
-      }
-    };
-
-    /*for(var i=0; i<=labelIndex+1; i++) {
-      for(var j=i; j<=labelIndex+1; j++){
-        if (i<10) var i1 = "0"+i;
-        else var i1 = i;
-        if (j<10) var j1 = "0"+j;
-        else var j1 = j;
-        
-        if ($("#"+i1+j1).prop("checked")) { //если выбрано
-          var curEdge = []; //текущее ребро
-          var point1 = i; //id точки
-          var point2 = j; //id другой точки
-
-          //формирование текущего ребра
-          curEdge.push(point1);
-          curEdge.push(point2);
-          var latLng1 = new google.maps.LatLng(allNodes[point1].x, allNodes[point1].y);
-          var latLng2 = new google.maps.LatLng(allNodes[point2].x, allNodes[point2].y);
-          var distance = google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2);
-          curEdge.push(distance);
-          //вставка текущего ребра в массив всех ребер
-          allEdges.push(curEdge);
-        }
-      }
-    }*/
-  };
   function sortAllEdges() { //отсортировать массив всех ребер по возрастанию(сначала маленькие)
     for(var i=0; i<allEdges.length-1; i++) {
       var min = i;
@@ -196,6 +89,11 @@
     		var coordinates = [
     			{lat: allNodes[point1].x, lng: allNodes[point1].y},{lat: allNodes[point2].x, lng: allNodes[point2].y}
     		];
+
+    		//color marker
+            //console.log(allNodes[point2].par);
+            markers[point1].setIcon( getIcon(point1, allNodes[point1].par) );
+            markers[point2].setIcon( getIcon(point2, allNodes[point2].par) );
 
     		var flightPath = new google.maps.Polyline({
     			path: coordinates,
@@ -323,9 +221,39 @@
   };
 
 //инициализация карты
-  function getIcon(text, fillColor, textColor, outlineColor) {
+  function getIcon(text, par = 1) {
+      var massColors = [
+          { //якорная
+              fillColor: "ffffff",
+              textColor: "000000",
+              outlineColor: "000000"
+          },
+          { //первая
+              fillColor: "cccccc",
+              textColor: "000000",
+              outlineColor: "000000"
+          },
+          { //вторая
+              fillColor: "ff0000",
+              textColor: "000000",
+              outlineColor: "000000"
+          },
+          { //третья
+              fillColor: "00ff00",
+              textColor: "000000",
+              outlineColor: "000000"
+          },
+          { //четвертая
+              fillColor: "0000ff",
+              textColor: "ffffff",
+              outlineColor: "000000"
+          }
+      ];
+
+      console.log(typeof par, par);
+
       if (!text) text = '•'; //generic map dot
-      var iconUrl = "http://chart.googleapis.com/chart?cht=d&chdp=mapsapi&chl=pin%27i\\%27[" + text + "%27-2%27f\\hv%27a\\]h\\]o\\" + fillColor + "%27fC\\" + textColor + "%27tC\\" + outlineColor + "%27eC\\Lauto%27f\\&ext=.png";
+      var iconUrl = "http://chart.googleapis.com/chart?cht=d&chdp=mapsapi&chl=pin%27i\\%27[" + text + "%27-2%27f\\hv%27a\\]h\\]o\\" + massColors[par].fillColor + "%27fC\\" + massColors[par].textColor + "%27tC\\" + massColors[par].outlineColor + "%27eC\\Lauto%27f\\&ext=.png";
       return iconUrl;
   }
   var map = document.getElementById('map'); //создание карты
@@ -352,7 +280,7 @@
          map: map,
          draggable: true,
          //label: ""+(++labelIndex),
-         icon: getIcon((++labelIndex), "cccccc", "000000", "000000")
+         icon: getIcon( (++labelIndex), 0 )
      });
 
   	if (!wasFirst) {
@@ -361,10 +289,10 @@
   	}
   	else addNodeToAllNodes(location.lat(),location.lng(),-1);
   	
-    addRowAndColInMassBool();
+    table.addRowAndColInMassBool();
     
     markers.push(marker);
-    showRow(markers.length-1);
+    table.showRow(markers.length-1);
 
     google.maps.event.addListener(marker, "click", function(e) { //при нажатии на маркер
        /*var infoWindow = new google.maps.InfoWindow({
@@ -376,7 +304,20 @@
 
        var id = getIdMarkerFromAllMarkers(curLat, curLng);
        if (id>-1) {
-          showRow(id);
+           //ПЕРЕДЕЛАТЬ
+           $(".side-panel").removeClass("open");
+           setTimeout(function() {
+               table.showRow(id);
+
+               setTimeout(function() {
+
+                   $(".side-panel").addClass("open");
+
+               }, 500);
+
+           }, 500);
+
+
        }
     });
 
@@ -421,7 +362,7 @@ function main() {
   deleteAllPolylinesFromMap();
 
 
-  readFromTable(); //чтение данных из таблицы
+  table.readFromTable(); //чтение данных из таблицы
   sortAllEdges(); //сортировка массива ребер по их длине
 
   //console.log("after sorting",allEdges);
