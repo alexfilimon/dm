@@ -26,6 +26,80 @@
     $(".side-panel").toggleClass("open");
   });
 
+
+function clickDeleteMarker(e){
+    lat = e.getAttribute('lat');
+    lng = e.getAttribute('lng');
+
+    deleteMarker(lat, lng);
+
+    deleteAllPolylinesFromMap();
+    main();
+};
+
+
+
+/*
+
+//получить ребро по точке (вторая точка имеет меньший параметр)
+    function getEdge(node) {
+
+        for (var i = 0; i < finalEdges.length; i++) {
+            //console.log(allEdges[i]);
+            if ( allNodes[ finalEdges[i][0] ] == node || allNodes[ finalEdges[i][1] == node ] ) {
+                var curNode;
+                if ( allNodes[ finalEdges[i][0] ] == node ) {
+                    curNode = allNodes[ finalEdges[i][1] ];
+                } else {
+                    curNode = allNodes[ finalEdges[i][0] ];
+                }
+
+                if (node.par > curNode.par) {
+                    return finalEdges[i];
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+
+//короткий путь
+    function shortPath() {
+        //ищем максимальный par точки
+        var maxPar = 0;
+        for(var i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].par > maxPar) {
+                maxPar = allNodes[i].par;
+            }
+        }
+        //console.log(maxPar);
+
+        //ищем все точки с максимальным параметром
+        var massNodesMaxPar = [];
+        for(var i = 0; i < allNodes.length; i++) {
+            if (allNodes[i].par == maxPar) {
+                massNodesMaxPar.push(allNodes[i]);
+            }
+        }
+        //console.log(massNodesMaxPar);
+
+        //сохраняем пути
+        var massPath = [];
+
+        for(var i = 0; i < massNodesMaxPar.length; i++) {
+            massPath.push( getEdge(massNodesMaxPar[i]) );
+        }
+
+        console.log(massPath);
+    }
+
+*/
+
+
+
+
 //функции
   function getIdMarkerFromAllMarkers(lat, lng) { //поиск id маркера по его координатам
     for(var i=0; i<markers.length; i++) {
@@ -34,7 +108,7 @@
       }
     }
     return -1;
-  };
+  }
   function addNodeToAllNodes(x, y, param) { //добавить точку в массив всех точек
     var tempObject = {
       x: x,
@@ -43,7 +117,7 @@
       count: 0
     };
     allNodes.push(tempObject);
-  };
+  }
   function editNode(oldx, oldy, newx, newy) { //редактирование точки в массиве всех точек
     for (var i=0; i<allNodes.length; i++) {
       if ( allNodes[i].x == oldx && allNodes[i].y == oldy ){
@@ -69,7 +143,7 @@
         //console.log("obmen");
       }
     }
-  };
+  }
   function deleteNodeFromMass(curId, mass) { //удаляет точку из массива точек
       for(var i=0; i<mass.length; i++) {
           if (mass[i] == curId) {
@@ -78,7 +152,7 @@
           }
       }
       return false;
-  };
+  }
   function drawFinal() { //отрисовка готового графа
       //рисование
     	for(var i=0;i<finalEdges.length;i++){
@@ -107,14 +181,16 @@
 
     		polyLines.push(flightPath);
     	}
-  };
+
+        // shortPath();
+  }
   function deleteAllPolylinesFromMap() { //удаляет все линиии с карты
     for(var i=0; i<polyLines.length; i++){//удаляет все внешние ребра(polyLines) с карты
       polyLines[i].setMap(null);
     } 
 
     polyLines = [];
-  };
+  }
   function deleteEdgeFromMassEdges(curEdge, edgesGood) { //удаляет ребро из массива подходящих ребер
     for(var i=0; i<edgesGood.length; i++) {
       if ( curEdge == edgesGood[i] ) { 
@@ -123,7 +199,7 @@
       }
     }
     return false;
-  };
+  }
   function updateEdgesGood(processed, left) { //обновляет массив edgesGood
     var curMass = [];
     for (var i=0; i<allEdges.length; i++) {
@@ -137,7 +213,7 @@
         }
     }
     return curMass;
-  };
+  }
   function deleteAllEdgesFromMassEdges(node, massEdges) { //удаляет все ребра из массива всех ребер
     for(var i=0; i<massEdges.length; i++) {
       var node1 = massEdges[i][0];
@@ -148,7 +224,7 @@
       }
     }
     return true;
-  };
+  }
   function step(parametr) { //работающий алгоритм по шагам
       //условие прекращения рекурсии if (parametr > 3) return true;
         if (parametr > 3) {
@@ -214,11 +290,11 @@
             //обновить edgesGood
               edgesGood = updateEdgesGood(processed, left);
           }
-      };
+      }
 
       //условие вхождения в рекурсию if () step(parametr+1);
       if (left.length > 0) step(parametr+1);
-  };
+  }
 
 //инициализация карты
   function getIcon(text, par = 1) {
@@ -250,7 +326,7 @@
           }
       ];
 
-      console.log(typeof par, par);
+      //console.log(typeof par, par);
 
       if (!text) text = '•'; //generic map dot
       var iconUrl = "http://chart.googleapis.com/chart?cht=d&chdp=mapsapi&chl=pin%27i\\%27[" + text + "%27-2%27f\\hv%27a\\]h\\]o\\" + massColors[par].fillColor + "%27fC\\" + massColors[par].textColor + "%27tC\\" + massColors[par].outlineColor + "%27eC\\Lauto%27f\\&ext=.png";
@@ -280,8 +356,11 @@
          map: map,
          draggable: true,
          //label: ""+(++labelIndex),
-         icon: getIcon( (++labelIndex), 0 )
+         icon: getIcon( (++labelIndex), 0 ),
+         animation: google.maps.Animation.DROP
      });
+
+
 
   	if (!wasFirst) {
   		addNodeToAllNodes(location.lat(),location.lng(),0); //добавление точки в внутренний массив
@@ -316,6 +395,12 @@
                }, 500);
 
            }, 500);
+
+           var infoWindow = new google.maps.InfoWindow({
+               content: "<button class='btn btn-delete' onclick='clickDeleteMarker(this)' lat='" + curLat + "' lng='" + curLng + "'>Удалить</button>"
+           });
+
+           infoWindow.open(map, marker);
 
 
        }
@@ -381,7 +466,7 @@ function main() {
   //step(1);
   //console.log("final edges: ",finalEdges);
   drawFinal();
-};
+}
 
 //точка входа
 $(".button-build").click(function(){
