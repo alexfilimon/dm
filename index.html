@@ -11,82 +11,112 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-    <!-- <div class="wrap">
-        <div class="header">
-            
-        </div>
-        <div class="content">
-            
-        </div>
-        <div class="footer">
-            
-        </div>
-    </div>
-    
-    <div class="side">
-        
-    </div> -->
     <div class="wrap">
-        <header class="header">
-            <div class="container">
-                <button class="button-menu button-top">
-                    <i class="fa fa-bars" aria-hidden="true"></i>
-                </button>
-                <div class="logo">
-                    <span class="text">
-                        RadioGraph
-                    </span>
-                </div>
+
+        <div class="container">
+            <header class="header">
                 <div class="search">
                     <div class="icon"><i class="fa fa-search" aria-hidden="true"></i></div>
-                    <input id="searchTextField" type="text" placeholder="Поиск местоположения"> 
+                    <input id="searchTextField" type="text" placeholder="Поиск местоположения">
+                </div>
+                <div class="settings">
+                    <button class="button-settings">
+                        <span class="icon"><i class="fa fa-cog" aria-hidden="true"></i></span>
+                        <span class="name">Настройки</span>
+                    </button>
                 </div>
                 <div class="buttons">
-                    <button class="button-info button-top">
-                        <i class="fa fa-info" aria-hidden="true"></i>
-                    </button>
-                    <button class="button-delete-nodes button-top">
-                        <i class="fa fa-trash" aria-hidden="true"></i>
-                        <span class="name">Очистить</span>
-                    </button>
-                    <button class="button-build button-top">
-                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                        <span class="name">Построить</span>
+                    <div class="button-build button-top">
+                        <button><i class="fa fa-check" aria-hidden="true"></i></button>
+                        <div class="extend">Построить</div>
+                    </div>
+                    <div class="button-delete-nodes button-top">
+                        <button><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        <div class="extend">Очистить</div>
+                    </div>
+                    <div class="button-info button-top">
+                        <button><i class="fa fa-info" aria-hidden="true"></i></button>
+                        <div class="extend">Инфо</div>
+                    </div>
+                </div>
+            </header>
+            <div class="table-outer">
+                <div class="table-inner">
+                    <div class="top">
+                        Точка <span class="name-node"></span> имеет связи:
+                    </div>
+                    <div class="table-content" id="table">
+                        <table>
+                        </table>
+                    </div>
+                    <div class="bottom">
+                        <button class="delete-node">
+                            Удалить точку
+                        </button>
+                    </div>
+                    <button class="close">
+                        <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
-        </header>
-        <div class="content">
-            <div id="map"></div>
         </div>
-        <footer class="footer">
-            <div class="container">
-                <div class="text">
-                    <a href="mailto:as_filimon@mail.ru">Задать вопрос разработчику</a>
+    </div>
+    <div id="map"></div>
+
+    <div class="back"></div>
+    <div class="popup-settings popup">
+        <div class="popup-wrap">
+            <button class="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+        </div>
+    </div>
+    <div class="popup-info popup">
+        <div class="popup-wrap">
+            <button class="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <h2>Программа RadioGraph</h2>
+            <p>
+                Программа создана при поддержке фонда психически больных людей, которые после вида этого кода выходили в окно...
+            </p>
+            <p>
+                Описание как работает
+            </p>
+            <div class="developers">
+                <div class="row">
+                    <a href="https://vk.com/alexfilimon" class="developer">
+                        <div class="developer__img">
+                            <img src="https://pp.userapi.com/c631529/v631529999/44a6e/xaCQ1iHIIVc.jpg" alt="Александр Филимонов">
+                        </div>
+                        <div class="developer__name">
+                            Александр Филимонов
+                        </div>
+                    </a>
+                    <a href="https://vk.com/blessedbyjobs" class="developer">
+                        <div class="developer__img">
+                            <img src="https://pp.userapi.com/c639627/v639627771/59452/4Yd1QOWJtjY.jpg" alt="Алексей Рябков">
+                        </div>
+                        <div class="developer__name">
+                            Алексей Рябков
+                        </div>
+                    </a>
                 </div>
             </div>
-        </footer>
+            <a href="mailto:as_filimon@mail.ru" class="button-write">Напишите нам</a>
+        </div>
     </div>
-   
-    
 
-    <!-- <button class="go">Построить</button> -->
-
-    
-
-    <div class="side-panel">
+    <!--<div class="side-panel">
         <div id="wrap-table">
             <table>
                 
             </table>
         </div>
         
-    </div>
+    </div>-->
 
     <script src="libs/jquery.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAp2evgeSPajlRd9Z2LjIraXYFQ_4J46S0&libraries=geometry,places"></script>
     <script src="libs/switchery-master/standalone/switchery.js"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/settings.js"></script>
     <script src="js/view.js"></script>
     <script src="js/edges.js"></script>
     <script src="js/nodes.js"></script>

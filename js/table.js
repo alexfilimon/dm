@@ -1,47 +1,47 @@
 var table = {
     massBool: [], //массив булианов, отражающий возможные ребра
-    shownId: 0,           //текущая показываемая точка в боковом меню
 
     showRow: function (idNode) { //показать строку(из массива булеанов) в боковом меню по id точки
-        this.shownId = idNode;
-        var out = "<div class>Точка "+ idNode +" имеет связи с точками: </div>";
-        out = out +"<table>"; //то, что будет вставляться в html страницу
-
+        var table = "<table>"; //то, что будет вставляться в html страницу
+        //проходим по всей таблице
         for(var i=0; i<this.massBool.length; i++){ //генерируется сама таблица
-            var out = out+"<tr>";
+            table += "<tr>";
 
-            out = out+"<td>"+i+"</td>";
+            table += "<td>" + i + "</td>";
+            //если текущий номер равен переданному id точки
             if (i == idNode) {
-                out = out+"<td>"+"-"+"</td>";
+                table += "<td>"+"-"+"</td>";
             } else {
-                var checked = "";
-                if ( this.massBool[i][idNode] == true ) checked = "checked";
-                if (i<10) var iInsert = "0"+i;
-                else var iInsert = i;
-                if (idNode<10) var jInsert = "0"+idNode;
-                else var jInsert = idNode;
-                out = out+"<td><input type='checkbox' id='"+iInsert+jInsert+"' class='checkbox' name='check' "+checked+"></td>";
+                //актвирован ли чекбокс
+                    var checked = "";
+                    if ( this.massBool[i][idNode] === true ) checked = "checked";
+                //формируем html-id точки
+                    var iInsert, jInsert;
+                    iInsert = i<10 ? ("0" + i) : i ;
+                    jInsert = idNode<10 ? ("0"+idNode) : idNode ;
+                    table += "<td><input type='checkbox' id='"+iInsert+jInsert+"' class='checkbox' name='check' "+checked+"></td>";
             }
 
-            out = out+"</tr>";
+            table += "</tr>";
 
 
         }
-        out = out+"</table>";
+        table += "</table>";
 
-        $("#wrap-table").html(out); //вставляется сгенерированное сообщение в отдельный блок #wrap-table
+        //вставляется сгенерированное сообщение в отдельный блок
+        $(".table-content").html(table);
 
-        $(".checkbox").on("change",function(e) {
-            //console.log($(this).attr("id"));
-            var cur = $(this).attr("id");
-            var curx = Number(cur.substr(0,2));
-            var cury = Number(cur.substr(2,2));
-            console.log(curx, cury);
-            this.massBool[curx][cury] = ($("#"+cur).prop('checked'));
-            this.massBool[cury][curx] = ($("#"+cur).prop('checked'));
-        });
+        //название точки
+        $(".name-node").text(idNode);
+
+        // TODO сделать кнопку удаления и назначит ей обработчик
+
+        //обработчики событий чекбоксов
+        checkboxOnClick();
+
+        //показываем таблицу
+        objView.showTable();
     },
-
     addNode: function () { //добавить строку и столбец в массив булеанов
         var size = this.massBool.length;
 
@@ -56,7 +56,6 @@ var table = {
             this.massBool[i].push(true);
         }
     },
-
     readFromTable: function readFromTable() { //читает ребра из таблицы
         var size = this.massBool.length;
 
@@ -77,3 +76,17 @@ var table = {
         }
     }
 };
+function checkboxOnClick() { //обработчик изменения чекбоксов
+    $(".checkbox").on("change",function() {
+
+        var cur = $(this).attr("id");
+        var curx = Number(cur.substr(0,2));
+        var cury = Number(cur.substr(2,2));
+
+        console.log(curx, cury);
+        console.log(table.massBool);
+
+        table.massBool[curx][cury] = $("#"+cur).prop('checked');
+        table.massBool[cury][curx] = $("#"+cur).prop('checked');
+    });
+}

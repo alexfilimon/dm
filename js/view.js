@@ -1,5 +1,5 @@
 var objView = {
-    drawEdges: function() {
+    drawEdges: function() { //рисует edges(у которых final == true) на карте
         objEdges.edges.forEach(function(item, i) {
             if (item.final) {
                 var coordinates = [
@@ -32,7 +32,7 @@ var objView = {
             }
         });
     },
-    deleteEdgesFromMap: function() { //убрать все линии с карты
+    deleteEdgesFromMap: function() { //убирает все линии с карты
         objEdges.edges.forEach(function(item) {
             if (item.polyline) {
                 item.polyline.setMap(null);
@@ -40,14 +40,38 @@ var objView = {
             }
         });
     },
-    deleteNodesFromMap: function(id) {
+    deleteNodesFromMap: function(id) { //удаляет все точки с карты
         objNodes.nodes.forEach(function(item) {
             item.marker.setMap(null);
             item.marker = null;
         });
     },
-    deleteNodeFromMap: function(id) {
+    deleteNodeFromMap: function(id) { //удаляет определенную точку с карты по ее id
         objNodes.nodes[id].marker.setMap(null);
         objNodes.nodes[id].marker = null;
+    },
+    hideTable: function() { //скрыть таблицу
+        $(".table-outer").animate({
+            top: "-" + $(".table-outer").height() + "px",
+            opacity: 0,
+            display: "none"
+        }, 500, function() {
+            $(".table-outer").hide();
+        });
+    },
+    showTable: function() { //показать таблицу
+        $(".table-outer").show().animate({
+            top: "100px",
+            opacity: 1,
+            display: "block"
+        }, 500);
+    },
+    hidePopup: function() {
+        $(".back").fadeOut();
+        $(".popup").fadeOut();
+    },
+    showPopupInfo: function () {
+        $(".back").fadeIn();
+        $(".popup-info").fadeIn();
     }
 };

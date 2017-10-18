@@ -1,13 +1,11 @@
 var objNodes = {
     nodes: [],
 
-    /*
+    /* структура объекта точки
     {
-        lat: 105.1587,
-        lng: 165.4564,
-        count: 2,
-        param: 1, //-1 - означает, что эта точка еще не связана с остальными
-        marker: MarkerGoogleMaps
+        count: 2, //кол-во смежных точек
+        param: 1, //дальность от нулевой точки (-1 - означает, что эта точка еще не связана с остальными)
+        marker: MarkerGoogleMaps //объект гугл карт
     }
     */
 
@@ -28,15 +26,17 @@ var objNodes = {
         });
         this.nodes[0].param = this.nodes[0].count = 0;
     },
-    getId: function(lat, lng) {
+    getId: function(marker) { //получаем id точки по переданному гугл маркеру
+        var ret = -1;
         this.nodes.forEach(function(item, i) {
-            if (item.marker.getPosition().lat() === lat && item.marker.getPosition().lng() === lng) {
-                return i;
+            if (item.marker === marker) {
+                ret = i;
+                return true;
             }
         });
-        return -1;
+        return ret;
     },
-    deleteNodeFromCustomArr: function(nodeId, arr) {
+    deleteNodeFromCustomArr: function(nodeId, arr) { //даляем точку из  кастомного массива точек(передается в параметрах)
         var id = arr.indexOf(nodeId);
         arr.splice(id, 1);
     }

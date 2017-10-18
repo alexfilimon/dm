@@ -1,50 +1,14 @@
-// table.js - this is bool table
+// settings.js
+// table.js
 // nodes.js
 // edges.js
 // view.js
 
-var settings = {
-    markersColors: [
-        { //якорная
-            fillColor: "ffffff",
-            textColor: "000000",
-            outlineColor: "000000"
-        },
-        { //первая
-            fillColor: "cccccc",
-            textColor: "000000",
-            outlineColor: "000000"
-        },
-        { //вторая
-            fillColor: "ff0000",
-            textColor: "000000",
-            outlineColor: "000000"
-        },
-        { //третья
-            fillColor: "00ff00",
-            textColor: "000000",
-            outlineColor: "000000"
-        },
-        { //четвертая
-            fillColor: "0000ff",
-            textColor: "ffffff",
-            outlineColor: "000000"
-        }
-    ],
-    polyLineWeight: 2,
-    polyLineColor: "#FF0000",
-    polylineOpacity: 1.0,
-    colorShortestPath: "00FF00",
-
-    mapCenter: {
-        lat: 51.685959,
-        lng: 39.183597
-    },
-    mapZoom: 12
-};
-
 var algoritm = {
     start: function() {
+        //закрываем таблицу
+        objView.hideTable();
+
         //сбрасываем нарисованные линии
         objView.deleteEdgesFromMap();
 
@@ -81,8 +45,6 @@ var algoritm = {
                 processed.push(i);
             }
         });
-        console.log("processed: ", processed);
-
         //формируем массив left = []; содержит точки с param -1
         var left = [];
         objNodes.nodes.forEach(function(item, i) {
@@ -90,10 +52,8 @@ var algoritm = {
                 left.push(i);
             }
         });
-        console.log("left: ", left);
-
         //формируем массив edgesGood = [];
-        var edgesGood = objEdges.updateEdgesGood(processed, left);
+        var edgesGood = objEdges.createEdgesGood(processed, left);
         console.log("edgesGood: ", edgesGood);
 
         if (edgesGood.length === 0) console.log("edgesGood пуст");
@@ -128,7 +88,7 @@ var algoritm = {
             if (objNodes.nodes[node1].count === 3) objNodes.deleteNodeFromCustomArr(node1, processed);
 
             //обновляем массив edgesGood
-            edgesGood = objEdges.updateEdgesGood(processed, left);
+            edgesGood = objEdges.createEdgesGood(processed, left);
         }
         //---------------------
 
@@ -138,10 +98,13 @@ var algoritm = {
         }
 
     },
-    clear: function() {
+    clear: function() { //при нажатии на кнопку очистить
+        //удаляем точки с карты и из массива
         objView.deleteNodesFromMap();
         objNodes.nodes = [];
+        //очищаем массив булеаном
         table.massBool = [];
+        //начинаем алгоритм заново
         this.start();
     }
 };
@@ -163,12 +126,23 @@ function getIcon(id, param) {
 //инициализация карты
     var map = document.getElementById('map'); //создание карты
     map = new google.maps.Map(map, {
-        center: {lat: settings.mapCenter.lat, lng: settings.mapCenter.lng},
-        zoom: settings.mapZoom
+        center: {
+            lat: settings.mapCenter.lat,
+            lng: settings.mapCenter.lng
+        },
+        zoom: settings.mapZoom,
+        //кастомный стиль
+        styles: settings.mapStyle,
+        //удаление лишних кнопок на карте
+        zoomControl: true,
+        mapTypeControl: false,
+        scaleControl: true,
+        streetViewControl: false,
+        rotateControl: false,
+        fullscreenControl: false
     });
 
 //инициализация поля "поиск"
-//поле поиска
     var input = document.getElementById('searchTextField');
     var options = {
         types: ['(regions)'],
@@ -195,85 +169,70 @@ function getIcon(id, param) {
 
         objNodes.add(location.lat(), location.lng(), marker);
 
-        /*if (!wasFirst) {
-            addNodeToAllNodes(location.lat(),location.lng(),0); //добавление точки в внутренний массив
-            wasFirst = true;
-        }
-        else addNodeToAllNodes(location.lat(),location.lng(),-1);*/
-
+        //скрываем таблицу и добавляем в нее строку и столбец с булианами(связи с другими точками)
+        objView.hideTable();
         table.addNode();
 
-        //markers.push(marker);
-
-        ////table.showRow(markers.length-1);
-
+        //при клике на маркер
         google.maps.event.addListener(marker, "click", function(e) { //при нажатии на маркер
-            /*var infoWindow = new google.maps.InfoWindow({
-                content: 'x: ' + location.lat() + '<br />y: ' + location.lng()
-            });
-            infoWindow.open(map, marker);*/
-            var lat = e.latLng.lat();
-            var lng = e.latLng.lng();
-
-            var id = objNodes.getId(lat, lng);
-
-
-            //ПЕРЕДЕЛАТЬ
-
-            //показать панель связи точки с другими точками и кнопку удалить точку
-
-            /*$(".side-panel").removeClass("open");
-            setTimeout(function() {
-                table.showRow(id);
-
-                setTimeout(function() {
-
-                    $(".side-panel").addClass("open");
-
-                }, 500);
-
-            }, 500);*/
-
-            //----------------------
-            //вместо инфоокна лучше сделать кнопку на панели связи этой точки с другими
-            //----------------------
-            /*var infoWindow = new google.maps.InfoWindow({
-                content: "<button class='btn btn-delete' onclick='clickDeleteMarker(this)' lat='" + curLat + "' lng='" + curLng + "'>Удалить</button>"
-            });
-
-            infoWindow.open(map, marker);*/
+            //ищем id маркера, на который нажали
+            var id = objNodes.getId(marker);
+            //показываем таблицу с текущим id
+            table.showRow(id);
         });
 
         //перемещение маркера
-        google.maps.event.addListener(marker, "dragstart", function(e) {
-            //var curMarker = marker.getPosition();
-            //tmpArrayForMarkerDrag[0] = {lat: curMarker.lat(), lng: curMarker.lng()};
-        });
         google.maps.event.addListener(marker, "drag", function(e) {
-            //var temp = marker.getPosition();
-            //tmpArrayForMarkerDrag[1] = {lat: temp.lat(), lng: temp.lng()};
-
             objView.deleteEdgesFromMap();
-
-            //editNode(nodeTemp[0].lat,nodeTemp[0].lng,nodeTemp[1].lat,nodeTemp[1].lng);
-
-
             objView.drawEdges();
-
-            //tmpArrayForMarkerDrag[0] = tmpArrayForMarkerDrag[1];
         });
         google.maps.event.addListener(marker, "dragend", function(e) {
-            //alert("Выполнение программы приостановилось...");
             algoritm.start();
-            //console.log(edges);
         });
     });
 
 //точка входа
-$(".button-build").click(function(){
-    if (objNodes.nodes.length < 2) alert("Недостаточно точек");
-    else algoritm.start();
-});
-$(".button-delete-nodes").click(function(){
-    algoritm.clear();
-});
+    $(".button-build").click(function(){
+        if (objNodes.nodes.length < 2) alert("Недостаточно точек");
+        else algoritm.start();
+    });
+
+//кнопки
+    //очистить карту от точек
+    $(".button-delete-nodes").click(function(){
+        algoritm.clear();
+    });
+    //закрыть таблицу
+    $(".table-outer .close").click(function() {
+        objView.hideTable();
+    });
+    //закрыть popup
+    $(".popup .close").click(function() {
+        objView.hidePopup();
+    });
+    $(".back").click(function() {
+        objView.hidePopup();
+    });
+    $(".button-info").click(function() {
+        objView.showPopupInfo();
+    })
+
+//высота таблицы
+    function heightTable() {
+        hBrowser = $(window).height();
+        h = hBrowser - 260;
+        $(".table-inner .table-content").css("max-height", h + "px");
+    };
+    heightTable();
+//высота popup окна
+    function topPopup() {
+        var hBrowser = $(window).height();
+        var hPopup = $(".popup-info").height();
+        console.log(hBrowser, hPopup);
+        $(".popup").css("top", ( (hBrowser - hPopup)/2 ) + "px");
+    };
+    topPopup();
+    $(window).resize(function () {
+        heightTable();
+        topPopup();
+    });
