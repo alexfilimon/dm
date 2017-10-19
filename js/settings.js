@@ -8,22 +8,22 @@ var settings = {
         { //первая
             fillColor: "ec1c4b",
             textColor: "ffffff",
-            outlineColor: "f3f3f3"
+            outlineColor: "626262"
         },
         { //вторая
             fillColor: "ffd803",
             textColor: "000000",
-            outlineColor: "ece473"
+            outlineColor: "626262"
         },
         { //третья
             fillColor: "a2d4ab",
             textColor: "000000",
-            outlineColor: "3eaca8"
+            outlineColor: "626262"
         },
         { //четвертая
             fillColor: "f6903d",
-            textColor: "ffffff",
-            outlineColor: "ec1e4b"
+            textColor: "000000",
+            outlineColor: "626262"
         }
     ],
     mapStyle: [
