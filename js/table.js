@@ -7,7 +7,7 @@ var table = {
         for(var i=0; i<this.massBool.length; i++){ //генерируется сама таблица
             table += "<tr>";
 
-            table += "<td>" + i + "</td>";
+            table += "<td>Точка " + i + "</td>";
             //если текущий номер равен переданному id точки
             if (i == idNode) {
                 table += "<td>"+"-"+"</td>";
@@ -19,7 +19,7 @@ var table = {
                     var iInsert, jInsert;
                     iInsert = i<10 ? ("0" + i) : i ;
                     jInsert = idNode<10 ? ("0"+idNode) : idNode ;
-                    table += "<td><input type='checkbox' id='"+iInsert+jInsert+"' class='checkbox' name='check' "+checked+"></td>";
+                    table += "<td><div class='checkbox'><input type='checkbox' id='"+iInsert+jInsert+"' name='check' "+checked+"><label for="+iInsert+jInsert+"></label></div></td>";
             }
 
             table += "</tr>";
@@ -77,14 +77,10 @@ var table = {
     }
 };
 function checkboxOnClick() { //обработчик изменения чекбоксов
-    $(".checkbox").on("change",function() {
-
+    $(".checkbox input").on("change",function() {
         var cur = $(this).attr("id");
         var curx = Number(cur.substr(0,2));
         var cury = Number(cur.substr(2,2));
-
-        console.log(curx, cury);
-        console.log(table.massBool);
 
         table.massBool[curx][cury] = $("#"+cur).prop('checked');
         table.massBool[cury][curx] = $("#"+cur).prop('checked');

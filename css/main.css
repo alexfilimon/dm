@@ -480,3 +480,79 @@ html, body, #map {
 .developer__name{
 	margin-top: 10px;
 }
+
+/*custom checkboxes*/
+.checkbox{
+	margin: 0;
+}
+.checkbox input{
+	display: none;
+}
+.checkbox label{
+	padding-left: 0;
+	position: relative;
+	width: 40px;
+	height: 25px;
+}
+.checkbox label:before{
+	content: "\f204";
+	font-family: FontAwesome;
+	display: inline-block;
+	width: 40px;
+	height: 38px;
+	font-size: 28px;
+	position: absolute;
+	top: -5px;
+	left: 0;
+}
+.checkbox label:after{
+	content: "\f205";
+	font-family: FontAwesome;
+	display: inline-block;
+	width: 40px;
+	height: 38px;
+	font-size: 28px;
+	position: absolute;
+	top: -5px;
+	left: 0;
+	display: none;
+}
+.checkbox input:checked + label:after{
+	display: inline-block;
+}
+.checkbox input:checked + label:before{
+	display: none;
+}
+
+/*popup-hub*/
+.popup-hub__overlay {
+	display: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,.6);
+	text-align: center;
+	cursor: pointer;
+	z-index: 500;
+}
+.popup-hub__overlay:after {
+	display: inline-block;
+	height: 100%;
+	width: 0;
+	vertical-align: middle;
+	content: ''
+}
+.popup-hub {
+	display: inline-block;
+	position: relative;
+	width: 500px;
+	padding: 20px;
+	border: 5px solid #fff;
+	border-radius: 12px;
+	background: #fff;
+	vertical-align: middle;
+	min-height: 400px;
+	cursor: default;
+}

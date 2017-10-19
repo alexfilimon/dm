@@ -54,7 +54,6 @@ var algoritm = {
         });
         //формируем массив edgesGood = [];
         var edgesGood = objEdges.createEdgesGood(processed, left);
-        console.log("edgesGood: ", edgesGood);
 
         if (edgesGood.length === 0) console.log("edgesGood пуст");
 
@@ -215,7 +214,16 @@ function getIcon(id, param) {
     });
     $(".button-info").click(function() {
         objView.showPopupInfo();
-    })
+    });
+    $(".button-settings").click(function() {
+        $(".popup-hub__overlay").fadeIn();
+    });
+    $(".popup-hub__overlay").click(function(event) {
+        e = event || window.event
+        if (e.target == this) {
+            $(".popup-hub__overlay").fadeOut();
+        }
+    });
 
 //высота таблицы
     function heightTable() {
@@ -228,7 +236,6 @@ function getIcon(id, param) {
     function topPopup() {
         var hBrowser = $(window).height();
         var hPopup = $(".popup-info").height();
-        console.log(hBrowser, hPopup);
         $(".popup").css("top", ( (hBrowser - hPopup)/2 ) + "px");
     };
     topPopup();
