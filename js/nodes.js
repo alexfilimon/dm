@@ -39,6 +39,9 @@ var objNodes = {
     deleteNodeFromCustomArr: function(nodeId, arr) { //даляем точку из  кастомного массива точек(передается в параметрах)
         var id = arr.indexOf(nodeId);
         arr.splice(id, 1);
+    },
+    deleteNode: function(id) {
+        objView.deleteNodeFromMap(id);
+        this.nodes.splice(id, 1);
     }
-
 };

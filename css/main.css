@@ -262,6 +262,8 @@ html, body, #map {
 	box-shadow: 0 0 20px rgba(0,0,0,0.2);
 	margin-left: 30px;
 	transition: box-shadow .5s ease;
+
+	display: none; /* TODO убрать при готовой кнопке настройки */
 }
 .header .button-top:hover .extend{
 	top: 50px;
@@ -429,6 +431,11 @@ html, body, #map {
 .popup h2{
 	margin-top: 0;
 	margin-bottom: 20px;
+	font-weight: 700;
+}
+.popup h4{
+	font-size: 22px;
+	font-weight: 700;
 }
 
 /*popup info*/
@@ -444,6 +451,26 @@ html, body, #map {
 	text-decoration: none;
 	opacity: .7;
 	color: #000000;
+}
+.popup-info .text-wrap{
+	overflow-y: auto;
+}
+.popup-info .text-wrap::-webkit-scrollbar {
+	width: 6px;
+	background-color: #F5F5F5;
+	border-radius: 3px;
+}
+.popup-info .text-wrap::-webkit-scrollbar-thumb {
+	background-color: #626262;
+	border-radius: 3px;
+}
+.popup-info .text-wrap::-webkit-scrollbar-track {
+	background-color: #F5F5F5;
+	border-radius: 3px;
+}
+.popup-info ul{
+	text-align: left;
+	margin-left: 30px;
 }
 
 /*block developers in popup*/

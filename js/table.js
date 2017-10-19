@@ -34,7 +34,8 @@ var table = {
         //название точки
         $(".name-node").text(idNode);
 
-        // TODO сделать кнопку удаления и назначит ей обработчик
+        //азначение кнопке уникального id для удаления нужной точки при нажатии на нее
+        $(".delete-node").attr('id', "delete" + idNode);
 
         //обработчики событий чекбоксов
         checkboxOnClick();
@@ -73,6 +74,12 @@ var table = {
                     objEdges.add(idNode1, idNode2);
                 }
             }
+        }
+    },
+    deleteRowAndCol: function(nodeId) {
+        this.massBool.splice(nodeId, 1);
+        for(var i = 0; i < this.massBool.length; i++) {
+            this.massBool[i].splice(nodeId, 1);
         }
     }
 };

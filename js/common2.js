@@ -6,6 +6,15 @@
 
 var algoritm = {
     start: function() {
+        //если точек нет
+        if (objNodes.nodes.length < 2) {
+            alert("Недостаточно точек для работы алгоритма");
+        }
+        if (objNodes.nodes.length > 46) {
+            alert("Достигнут максимум поставленных точек, пожалуйста удалите некоторые из них");
+            return true;
+        }
+
         //закрываем таблицу
         objView.hideTable();
 
@@ -35,6 +44,7 @@ var algoritm = {
         //прекращение рекурсии
         if (param > 3) {
             console.log("Прекращение рекурсии по причине длинных путей");
+            alert("Достигнут максимум поставленных точек, пожалуйста удалите некоторые из них");
             return true;
         }
 
@@ -192,8 +202,7 @@ function getIcon(id, param) {
 
 //точка входа
     $(".button-build").click(function(){
-        if (objNodes.nodes.length < 2) alert("Недостаточно точек");
-        else algoritm.start();
+        algoritm.start();
     });
 
 //кнопки
@@ -224,6 +233,13 @@ function getIcon(id, param) {
             $(".popup-hub__overlay").fadeOut();
         }
     });
+    //кнопка удалить точку
+    $(".delete-node").click(function() {
+        var id = $(this).attr("id").substring(6);
+        objNodes.deleteNode(id);
+        table.deleteRowAndCol(id);
+        algoritm.start();
+    });
 
 //высота таблицы
     function heightTable() {
@@ -235,6 +251,7 @@ function getIcon(id, param) {
 //высота popup окна
     function topPopup() {
         var hBrowser = $(window).height();
+        $(".popup .text-wrap").css("max-height", (hBrowser - 480) + "px");
         var hPopup = $(".popup-info").height();
         $(".popup").css("top", ( (hBrowser - hPopup)/2 ) + "px");
     };
