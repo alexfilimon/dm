@@ -108,6 +108,7 @@ var algoritm = {
 
     },
     clear: function() { //при нажатии на кнопку очистить
+
         //удаляем точки с карты и из массива
         objView.deleteNodesFromMap();
         objNodes.nodes = [];
