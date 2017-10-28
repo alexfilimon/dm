@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>RadioGraph</title>
     <meta name="description" content="Программа, созданная для построения сети тракинговой связи." />
+    <link rel="shortcut icon" href="favicon.ico">
 
     <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="libs/switchery-master/standalone/switchery.css">
@@ -12,57 +13,54 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div class="wrap">
 
-    <div class="container">
+    <div class="wrap">
         <header class="header">
-            <div class="search">
-                <div class="icon"><i class="fa fa-search" aria-hidden="true"></i></div>
-                <input id="searchTextField" type="text" placeholder="Поиск местоположения">
-            </div>
-            <div class="settings">
-                <button class="button-settings">
-                    <span class="icon"><i class="fa fa-cog" aria-hidden="true"></i></span>
-                    <span class="name">Настройки</span>
+            <div class="container">
+                <button class="button-menu button-top">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
                 </button>
-            </div>
-            <div class="buttons">
-                <div class="button-build button-top">
-                    <button><i class="fa fa-check" aria-hidden="true"></i></button>
-                    <div class="extend">Построить</div>
+                <div class="logo">
+                        <span class="text">
+                            RadioGraph
+                        </span>
                 </div>
-                <div class="button-delete-nodes button-top">
-                    <button><i class="fa fa-trash" aria-hidden="true"></i></button>
-                    <div class="extend">Очистить</div>
+                <div class="search">
+                    <div class="icon"><i class="fa fa-search" aria-hidden="true"></i></div>
+                    <input id="searchTextField" type="text" placeholder="Поиск местоположения">
                 </div>
-                <div class="button-info button-top">
-                    <button><i class="fa fa-info" aria-hidden="true"></i></button>
-                    <div class="extend">Инфо</div>
+                <div class="buttons">
+                    <button class="button-build button-top">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                        <span class="name">Построить</span>
+                    </button>
+                    <button class="button-delete-nodes button-top">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        <span class="name">Очистить</span>
+                    </button>
+                    <button class="button-info button-top">
+                        <i class="fa fa-info" aria-hidden="true"></i>
+                        <span class="name">Инфо</span>
+                    </button>
                 </div>
             </div>
         </header>
-        <div class="table-outer">
-            <div class="table-inner">
-                <div class="top">
-                    Точка <span class="name-node"></span> имеет связи:
-                </div>
-                <div class="table-content" id="table">
-                    <table>
-                    </table>
-                </div>
-                <div class="bottom">
-                    <button class="delete-node">
-                        Удалить точку
-                    </button>
-                </div>
-                <button class="close">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-            </div>
-        </div>
     </div>
-</div>
-<div id="map"></div>
+
+    <div id="map"></div>
+
+    <!-- <button class="go">Построить</button> -->
+
+
+
+    <div class="side-panel">
+        <div id="wrap-table">
+            <table>
+
+            </table>
+        </div>
+
+    </div>
 
 <div class="back"></div>
 <div class="popup-settings popup">
@@ -76,18 +74,15 @@
         <h2>Программа RadioGraph</h2>
         <div class="text-wrap">
             <div class="text">
-                <p>
-                    Программа, созданная для построения сети тракинговой связи.
-                    Алгоритм обеспечивает частичную автоматизацию процесса разработки сети, строя граф с некоторыми ограничениями - длина пути от базовой точки не превышает 4, и из каждого узла выходит не больше трех веток.
-                </p>
                 <h4>
                     Как работать с программой:
                 </h4>
                 <p>
                 <ul>
                     <li>Для построения сети разместите на карте необходимые точки и нажмите кнопку "Построить"</li>
-                    <li>Для редактирования связей с данной точкой нажмите на неё и в появившейся таблице настройте связи точек</li>
-                    <li>Для удаления точки из сети нажмите в таблице "Удалить точку"</li>
+                    <li>Для редактирования связей с данной точкой нажмите на неё и
+                        в появившейся таблице настройте связи точек</li>
+                    <li>Для удаления точки из сети нажмите в таблице слева от RadioGraph "Удалить точку"</li>
                     <li>Для очистки сети нажмите "Очистить"</li>
                 </ul>
                 </p>
@@ -96,25 +91,28 @@
         <div class="developers">
             <h3>Разработчики:</h3>
             <div class="row">
-                <a href="https://vk.com/alexfilimon" target="_blank" class="developer">
-                    <div class="developer__img">
-                        <img src="https://pp.userapi.com/c631529/v631529999/44a6e/xaCQ1iHIIVc.jpg" alt="Александр Филимонов">
-                    </div>
+                <a href="mailto:as_filimon@mail.ru" target="_blank" class="developer">
                     <div class="developer__name">
-                        Александр Филимонов
+                        Филимонов Александр Сергеевич
                     </div>
                 </a>
-                <a href="https://vk.com/blessedbyjobs" target="_blank" class="developer">
-                    <div class="developer__img">
-                        <img src="https://pp.userapi.com/c639627/v639627771/59452/4Yd1QOWJtjY.jpg" alt="Алексей Рябков">
-                    </div>
+                <a href="mailto:alrbkv@gmail.com" target="_blank" class="developer">
                     <div class="developer__name">
-                        Алексей Рябков
+                        Рябков Алексей Сергеевич
+                    </div>
+                </a>
+                <a href="mailto:kchudinova@yandex.ru" target="_blank" class="developer">
+                    <div class="developer__name">
+                        Чудинова Ксения Вячеславовна
+                    </div>
+                </a>
+                <a href="mailto:vereshaginVS@yandex.ru" target="_blank" class="developer">
+                    <div class="developer__name">
+                        Верещагин Владислав Сергеевич
                     </div>
                 </a>
             </div>
         </div>
-        <a href="mailto:as_filimon@mail.ru" target="_blank" class="button-write">Напишите нам</a>
     </div>
 </div>
 

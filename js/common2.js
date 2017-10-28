@@ -252,7 +252,7 @@ function getIcon(id, param) {
 //высота popup окна
     function topPopup() {
         var hBrowser = $(window).height();
-        $(".popup .text-wrap").css("max-height", (hBrowser - 480) + "px");
+        $(".popup .text-wrap").css("max-height", (hBrowser - 360) + "px");
         var hPopup = $(".popup-info").height();
         $(".popup").css("top", ( (hBrowser - hPopup)/2 ) + "px");
     };

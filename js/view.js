@@ -51,20 +51,10 @@ var objView = {
         objNodes.nodes[id].marker = null;
     },
     hideTable: function() { //скрыть таблицу
-        $(".table-outer").animate({
-            top: "-" + $(".table-outer").height() + "px",
-            opacity: 0,
-            display: "none"
-        }, 500, function() {
-            $(".table-outer").hide();
-        });
+        $(".side-panel").removeClass("open");
     },
     showTable: function() { //показать таблицу
-        $(".table-outer").show().animate({
-            top: "100px",
-            opacity: 1,
-            display: "block"
-        }, 500);
+        $(".side-panel").addClass("open");
     },
     hidePopup: function() {
         $(".back").fadeOut();

@@ -24,7 +24,8 @@ var objNodes = {
             item.param = -1;
             item.count = 0;
         });
-        this.nodes[0].param = this.nodes[0].count = 0;
+        this.nodes[0].param = 0;
+        this.nodes[0].count = 0;
     },
     getId: function(marker) { //получаем id точки по переданному гугл маркеру
         var ret = -1;
