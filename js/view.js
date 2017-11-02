@@ -56,6 +56,9 @@ var objView = {
     showTable: function() { //показать таблицу
         $(".side-panel").addClass("open");
     },
+    toggleTable: function() {
+        $(".side-panel").toggleClass("open");
+    },
     hidePopup: function() {
         $(".back").fadeOut();
         $(".popup").fadeOut();

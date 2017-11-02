@@ -6,10 +6,12 @@
     <meta name="description" content="Программа, созданная для построения сети тракинговой связи." />
     <link rel="shortcut icon" href="favicon.ico">
 
+    <!-- иконочный шрифт -->
     <link rel="stylesheet" href="libs/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="libs/switchery-master/standalone/switchery.css">
+    <!-- библиотека Bootstrap -->
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="libs/bootstrap/css/bootstrap-theme.min.css">
+    <!-- кастомные стили -->
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -40,7 +42,9 @@
                     </button>
                     <button class="button-info button-top">
                         <i class="fa fa-info" aria-hidden="true"></i>
-                        <span class="name">Инфо</span>
+                    </button>
+                    <button class="button-settings button-top">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -49,25 +53,20 @@
 
     <div id="map"></div>
 
-    <!-- <button class="go">Построить</button> -->
-
-
-
     <div class="side-panel">
+        <h3>
+            Точка <span class="name-node"></span> имеет связи с точками:
+        </h3>
         <div id="wrap-table">
             <table>
 
             </table>
         </div>
-
+        <button class="delete-node">Удалить точку <span class="name-node"></span></button>
     </div>
 
 <div class="back"></div>
-<div class="popup-settings popup">
-    <div class="popup-wrap">
-        <button class="close"><i class="fa fa-times" aria-hidden="true"></i></button>
-    </div>
-</div>
+
 <div class="popup-info popup">
     <div class="popup-wrap">
         <button class="close"><i class="fa fa-times" aria-hidden="true"></i></button>
@@ -117,13 +116,23 @@
 </div>
 
 <div class="popup-hub__overlay">
-    <div class="popup-hub"></div>
+    <div class="popup-hub">
+        <button class="close"><i class="fa fa-times" aria-hidden="true"></i></button>
+        <h2>Настройки программы</h2>
+        <ul>
+            <li>
+                <input class="settings__simple-alg" type="checkbox" checked>
+                <div class="name">
+                    Простой алгоритм(из базовой точки выходит 3 пути, иначе - 8 путей)
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 
 
 <script src="libs/jquery.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAp2evgeSPajlRd9Z2LjIraXYFQ_4J46S0&libraries=geometry,places"></script>
-<script src="libs/switchery-master/standalone/switchery.js"></script>
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/view.js"></script>

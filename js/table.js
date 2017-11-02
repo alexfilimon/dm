@@ -19,7 +19,7 @@ var table = {
                     var iInsert, jInsert;
                     iInsert = i<10 ? ("0" + i) : i ;
                     jInsert = idNode<10 ? ("0"+idNode) : idNode ;
-                    table += "<td><div class='checkbox'><input type='checkbox' id='"+iInsert+jInsert+"' name='check' "+checked+"><label for="+iInsert+jInsert+"></label></div></td>";
+                    table += "<td><input class='tableCheckbox' type='checkbox' id='"+iInsert+jInsert+"' name='check' "+checked+"></td>";
             }
 
             table += "</tr>";
@@ -29,7 +29,7 @@ var table = {
         table += "</table>";
 
         //вставляется сгенерированное сообщение в отдельный блок
-        $(".table-content").html(table);
+        $("#wrap-table").html(table);
 
         //название точки
         $(".name-node").text(idNode);
@@ -84,7 +84,7 @@ var table = {
     }
 };
 function checkboxOnClick() { //обработчик изменения чекбоксов
-    $(".checkbox input").on("change",function() {
+    $(".tableCheckbox").on("change",function() {
         var cur = $(this).attr("id");
         var curx = Number(cur.substr(0,2));
         var cury = Number(cur.substr(2,2));

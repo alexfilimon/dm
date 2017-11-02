@@ -10,10 +10,6 @@ var algoritm = {
         if (objNodes.nodes.length < 2) {
             alert("Недостаточно точек для работы алгоритма");
         }
-        if (objNodes.nodes.length > 46) {
-            alert("Достигнут максимум поставленных точек, пожалуйста удалите некоторые из них");
-            return true;
-        }
 
         //закрываем таблицу
         objView.hideTable();
@@ -94,7 +90,9 @@ var algoritm = {
             //удаляем точку из left массива
             objNodes.deleteNodeFromCustomArr(node2, left);
             //если это первая точка имеет count ==3, то удаляем ее из processed массива
-            if (objNodes.nodes[node1].count === 3) objNodes.deleteNodeFromCustomArr(node1, processed);
+            if (objNodes.nodes[node1].count === 3 && !settings.hardAlgoritm
+                || objNodes.nodes[node1].count === 3 && settings.hardAlgoritm && param !== 0
+                || settings.hardAlgoritm && node1 === 0 && objNodes.nodes[node1].count === 8 && param === 0) objNodes.deleteNodeFromCustomArr(node1, processed);
 
             //обновляем массив edgesGood
             edgesGood = objEdges.createEdgesGood(processed, left);
@@ -109,13 +107,16 @@ var algoritm = {
     },
     clear: function() { //при нажатии на кнопку очистить
 
+        //сбрасываем нарисованные линии и обнуляем массив ребер
+        objView.deleteEdgesFromMap();
+        objEdges.edges = [];
+
         //удаляем точки с карты и из массива
         objView.deleteNodesFromMap();
         objNodes.nodes = [];
-        //очищаем массив булеаном
+
+        //очищаем массив булеанов
         table.massBool = [];
-        //начинаем алгоритм заново
-        this.start();
     }
 };
 
@@ -225,6 +226,7 @@ function getIcon(id, param) {
     $(".button-info").click(function() {
         objView.showPopupInfo();
     });
+    //popup settings
     $(".button-settings").click(function() {
         $(".popup-hub__overlay").fadeIn();
     });
@@ -234,6 +236,9 @@ function getIcon(id, param) {
             $(".popup-hub__overlay").fadeOut();
         }
     });
+    $(".popup-hub .close").click(function() {
+        $(".popup-hub__overlay").fadeOut();
+    });
     //кнопка удалить точку
     $(".delete-node").click(function() {
         var id = $(this).attr("id").substring(6);
@@ -242,11 +247,22 @@ function getIcon(id, param) {
         algoritm.start();
     });
 
+    //button-menu
+    $(".button-menu").click(objView.hideTable);
+
+    //checkbox settings
+    $(".settings__simple-alg").on("change", function() {
+        var simple = $(this).prop('checked');
+        settings.hardAlgoritm = !simple;
+        algoritm.start();
+        //console.log("alg" + simple);
+    });
+
 //высота таблицы
     function heightTable() {
         hBrowser = $(window).height();
-        h = hBrowser - 260;
-        $(".table-inner .table-content").css("max-height", h + "px");
+        h = hBrowser - 206;
+        $("#wrap-table").css("max-height", h + "px");
     };
     heightTable();
 //высота popup окна

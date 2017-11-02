@@ -1,4 +1,5 @@
 var settings = {
+    //кастройки цветов маркеров и путей
     markersColors: [
         { //якорная
             fillColor: "f3f3f3",
@@ -168,9 +169,13 @@ var settings = {
     polylineOpacity: 1.0,
     colorShortestPath: "00FF00",
 
+    //настройки карты
     mapCenter: {
         lat: 51.685959,
         lng: 39.183597
     },
-    mapZoom: 12
+    mapZoom: 12,
+
+    //глобальные настройки программы
+    hardAlgoritm: false
 };
