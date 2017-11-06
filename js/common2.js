@@ -146,7 +146,10 @@ function getIcon(id, param) {
         styles: settings.mapStyle,
         //удаление лишних кнопок на карте
         zoomControl: true,
-        mapTypeControl: false,
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            position: google.maps.ControlPosition.BOTTOM_LEFT
+        },
         scaleControl: true,
         streetViewControl: false,
         rotateControl: false,
